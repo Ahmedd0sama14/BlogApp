@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 
 class ThemController extends Controller
 {
-    //
+    public function index()
+    {
+        return view('Themes.index');
+    }
 }
