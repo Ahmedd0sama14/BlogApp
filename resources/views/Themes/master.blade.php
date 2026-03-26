@@ -16,6 +16,7 @@
     @include('Themes.partials.footer')
     <!--================ End Footer Area =================-->
 
+    @include('Themes.partials.scripts')
 
 </body>
 

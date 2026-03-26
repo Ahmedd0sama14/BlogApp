@@ -35,21 +35,36 @@
                     </div>
                 </div>
                 <div class="col-md-8 col-lg-9">
-                    <form action="#/" class="form-contact contact_form" action="contact_process.php" method="post"
-                        id="contactForm" novalidate="novalidate">
+                    @if(session('success'))
+                        <div class="alert alert-success">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+                    <form action="{{ route('contacts') }}" class="form-contact contact_form"  method="post">
+                       @csrf
+
                         <div class="row">
                             <div class="col-lg-5">
                                 <div class="form-group">
                                     <input class="form-control" name="name" id="name" type="text"
-                                        placeholder="Enter your name">
+                                        placeholder="Enter your name" value="{{ old('name') }}">
+                                         @error('name')
+                                        <div class="alert alert-danger">{{ $message }}</div>
+                                    @enderror
                                 </div>
                                 <div class="form-group">
                                     <input class="form-control" name="email" id="email" type="email"
-                                        placeholder="Enter email address">
+                                        placeholder="Enter email address" value="{{ old('email') }}">
+                                         @error('email')
+                                        <div class="alert alert-danger">{{ $message }}</div>
+                                    @enderror
                                 </div>
                                 <div class="form-group">
                                     <input class="form-control" name="subject" id="subject" type="text"
                                         placeholder="Enter Subject">
+                                         @error('subject')
+                                        <div class="alert alert-danger">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
                             <div class="col-lg-7">

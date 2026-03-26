@@ -1,60 +1,74 @@
- <header class="header_area">
-     <div class="main_menu">
-         <nav class="navbar navbar-expand-lg navbar-light">
-             <div class="container box_1620">
-                 <!-- Brand and toggle get grouped for better mobile display -->
-                 <a class="navbar-brand logo_h" href="{{ route('index') }}"><img src="{{ asset('assets') }}/img/logo.png"
-                         alt=""></a>
-                 <button class="navbar-toggler" type="button" data-toggle="collapse"
-                     data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                     aria-label="Toggle navigation">
-                     <span class="icon-bar"></span>
-                     <span class="icon-bar"></span>
-                     <span class="icon-bar"></span>
-                 </button>
-                 <!-- Collect the nav links, forms, and other content for toggling -->
-                 <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
-                     <ul class="nav navbar-nav menu_nav justify-content-center">
-                         <li class="nav-item  @yield('home-active')"><a class="nav-link"
-                                 href="{{ route('index') }}">Home</a></li>
-                         <li class="nav-item submenu dropdown @yield('Categories-active')">
-                             <a href="{{ route('category') }}" class="nav-link dropdown-toggle" data-toggle="dropdown"
-                                 role="button" aria-haspopup="true" aria-expanded="false">Categories</a>
-                             <ul class="dropdown-menu">
-                                 <li class="nav-item"><a class="nav-link" href="blog-details.html">Food</a></li>
-                                 <li class="nav-item"><a class="nav-link" href="blog-details.html">Bussiness</a></li>
-                                 <li class="nav-item"><a class="nav-link" href="blog-details.html">Travel</a></li>
-                             </ul>
-                         </li>
-                         <li class="nav-item @yield('contact-active')"><a class="nav-link"
-                                 href="{{ route('ContactUs') }}">Contact</a></li>
-                     </ul>
+@php
+    $categories = \App\Models\Category::limit(5)->get();
+@endphp
+<header class="header_area">
+    <div class="main_menu">
+        <nav class="navbar navbar-expand-lg navbar-light">
+            <div class="container box_1620">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <a class="navbar-brand logo_h" href="{{ route('index') }}"><img src="{{ asset('assets') }}/img/logo.png"
+                        alt=""></a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
+                    <ul class="nav navbar-nav menu_nav justify-content-center">
+                        <li class="nav-item  @yield('home-active')"><a class="nav-link" href="{{ route('index') }}">Home</a>
+                        </li>
+                        <li class="nav-item submenu dropdown @yield('Categories-active')">
+                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button"
+                                aria-haspopup="true" aria-expanded="false">Categories</a>
+                            <ul class="dropdown-menu">
+                                @foreach ($categories as $category)
+                                    <li class="nav-item"><a class="nav-link"
+                                            href="{{ route('category', ['id' => $category->id]) }}">{{ $category->name }}</a>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </li>
+                        <li class="nav-item @yield('contact-active')"><a class="nav-link"
+                                href="{{ route('ContactUs') }}">Contact</a></li>
+                    </ul>
 
-                     <!-- Add new blog -->
-                     <a href="#" class="btn btn-sm btn-primary mr-2">Add New</a>
-                     <!-- End - Add new blog -->
+                    <!-- Add new blog -->
+                    @auth
+                        <a href="{{ route('blogs.create') }}" class="btn btn-sm btn-primary mr-2">
+                            Add New Blog
+                        </a>
+                    @endauth
+                    <!-- End - Add new blog -->
 
-                     <ul class="nav navbar-nav navbar-right navbar-social">
+                    <ul class="nav navbar-nav navbar-right navbar-social">
+                        @guest
+                            <a href="{{ route('register') }}" class="btn btn-sm btn-warning">
+                                Register / Login
+                            </a>
+                        @endguest
 
-                         @guest
-                             <a href="{{ route('register') }}" class="btn btn-sm btn-warning">
-                                 Register / Login
-                             </a>
-                         @endguest
-
-
-                         @auth
-                             <form action="{{ route('logout') }}" method="POST" style="display:inline;">
-                                 @csrf
-                                 <button type="submit" class="btn btn-sm btn-danger">
-                                     Logout
-                                 </button>
-                             </form>
-                         @endauth
-
-                     </ul>
-                 </div>
-             </div>
-         </nav>
-     </div>
- </header>
+                        @auth
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    {{ auth()->user()->name }}
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+                                    <a class="dropdown-item" href="{{ route('blogs.user') }}">My
+                                        Blogs</a>
+                                    <div class="dropdown-divider"></div>
+                                    <form action="{{ route('logout') }}" method="POST" class="px-3 py-1 m-0">
+                                        @csrf
+                                        <button type="submit" class="btn btn-sm btn-danger btn-block">Logout</button>
+                                    </form>
+                                </div>
+                            </li>
+                        @endauth
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+</header>
