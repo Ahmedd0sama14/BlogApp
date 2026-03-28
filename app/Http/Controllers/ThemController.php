@@ -11,7 +11,7 @@ class ThemController extends Controller
     public function index()
     {
 
-        $blogs = Blog::paginate(4);
+        $blogs = Blog::orderBy('created_at', 'asc')->paginate(4);
         return view('Themes.index', compact('blogs'));
     }
     public function category($id)

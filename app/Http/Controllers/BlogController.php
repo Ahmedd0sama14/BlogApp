@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreBlogRequest;
+use App\Http\Requests\UpdateBlogRequest;
 use App\Models\Blog;
 use App\Models\Category;
 use Illuminate\Support\Str;
@@ -16,7 +17,7 @@ class BlogController extends Controller
     }
     public function userBlogs()
     {
-        $userBlogs = Blog::where('user_id', auth()->id())->get();
+        $userBlogs = Blog::where('user_id', auth()->id())->paginate(2);
         return view('Themes.blogs.userblogs', compact('userBlogs'));
 
     }
@@ -65,15 +66,19 @@ class BlogController extends Controller
      */
     public function edit(Blog $blog)
     {
+        $categories = Category::all();
+        return view('Themes.blogs.editblog', compact('blog', 'categories'));
 
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Blog $blog)
+    public function update(UpdateBlogRequest $request, Blog $blog)
     {
-        //
+        $data =$request->validated();
+        dd($data);
+
     }
 
     /**
@@ -81,6 +86,6 @@ class BlogController extends Controller
      */
     public function destroy(Blog $blog)
     {
-        //
+
     }
 }
