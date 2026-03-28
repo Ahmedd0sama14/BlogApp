@@ -1,4 +1,6 @@
 @extends('Themes.master')
+@section('title', 'Edit Blog')
+@section('Blogs-active', 'active')
 @section('content')
     @include('Themes.partials.hero', ['title' => 'Blog Edit'])
 

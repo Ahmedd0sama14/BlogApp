@@ -6,8 +6,9 @@ use App\Http\Requests\StoreBlogRequest;
 use App\Http\Requests\UpdateBlogRequest;
 use App\Models\Blog;
 use App\Models\Category;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class BlogController extends Controller
 {
@@ -77,7 +78,15 @@ class BlogController extends Controller
     public function update(UpdateBlogRequest $request, Blog $blog)
     {
         $data =$request->validated();
-        dd($data);
+        if ($request->hasFile('image')) {
+            Storage::disk('public')->delete($blog->image);
+            $category = Category::findOrFail($data['category_id']);
+            $foldername=Str::slug($category->name);
+            $imagePath = $request->file('image')->store('blog_images/' . $foldername, 'public');
+            $data['image'] = $imagePath;
+        }
+        $blog->update($data);
+        return redirect()->back()->with('success', 'Blog updated successfully!');
 
     }
 
@@ -86,6 +95,8 @@ class BlogController extends Controller
      */
     public function destroy(Blog $blog)
     {
-
+        Storage::disk('public')->delete($blog->image);
+        $blog->delete();
+        return redirect()->back()->with('success', 'Blog deleted successfully!');
     }
 }

@@ -5,6 +5,9 @@
 @include('Themes.partials.hero', ['title' => 'My Blogs'])
 
 <section class="blog-post-area section-margin mt-4">
+    @if (session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
     <div class="container">
         <div class="row">
 
@@ -39,7 +42,7 @@
                                         </h5>
 
                                         <p class="card-text text-muted">
-                                            {{ \Illuminate\Support\Str::limit($blog->content, 100) }}
+                                            {{ ($blog->content) }}
                                         </p>
 
                                         <div class="mt-auto">
@@ -61,7 +64,7 @@
                                                 Edit
                                             </a>
 
-                                            <form action="#" method="POST" style="display:inline;">
+                                            <form action="{{ route('blogs.destroy', ['blog' => $blog]) }}" method="POST" style="display:inline;">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button class="btn btn-sm btn-outline-danger">
