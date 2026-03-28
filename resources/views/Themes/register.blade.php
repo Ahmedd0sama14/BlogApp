@@ -1,4 +1,5 @@
 @extends('Themes.master')
+@section('title', 'Register')
 @section('content')
     @include('Themes.partials.hero', ['title' => 'Rigister'])
 

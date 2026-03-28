@@ -2,6 +2,7 @@
 require __DIR__.'/auth.php';
 
 use App\Http\Controllers\BlogController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SubscriberController;
@@ -20,9 +21,16 @@ Route::controller(ContactController::class)->group(function () {
     Route::get('/ContactUs', 'view')->name('ContactUs');
     Route::post('/contacts', 'store')->name('contacts');
 });
+
 /* Blog Routes */
 Route::resource('blogs', BlogController::class);
 Route::get('blogs.user',[BlogController::class,'userBlogs'])->name('blogs.user');
+
+/* comment Routes */
+Route::middleware('auth')->group(function () {
+    Route::post('/comments/{id}', [CommentController::class, 'storeComment'])->name('comments.store');
+    Route::delete('/comments/{id}/delete', [CommentController::class, 'deleteComment'])->name('comments.delete');
+});
 
 
 Route::middleware('auth')->group(function () {
