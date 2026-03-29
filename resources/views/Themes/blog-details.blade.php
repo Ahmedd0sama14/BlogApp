@@ -48,10 +48,10 @@
                     <div class="comment-form mt-4">
                         <h4>Leave a Reply</h4>
                         <form class="form-contact comment_form" method="POST"
-                            action="{{ route('comments.store', ['id' => $blog->id]) }}" id="commentForm">
+                            action="{{ route('comments.store', ['blog' => $blog]) }}" id="commentForm">
                             @csrf
                             <div class="form-group">
-                                <textarea class="form-control" rows="5" name="message" placeholder="Write your comment..." required></textarea>
+                                <textarea class="form-control w-100 p-3 shadow-sm" rows="5" name="message" placeholder="Write your comment..." required></textarea>
                             </div>
                             <button type="submit" class="btn btn-primary">Post Comment</button>
                         </form>

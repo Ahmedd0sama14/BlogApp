@@ -3,19 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCommentRequest;
+use App\Models\Blog;
 use App\Models\Comment;
-use Illuminate\Http\Request;
 
 class CommentController extends Controller
 {
-    public function storeComment(StoreCommentRequest $request, $blogId)
+    public function storeComment(StoreCommentRequest $request,Blog $blog)
     {
-        $validatedData = $request->validated();
-        $validatedData['blog_id'] = $blogId;
-        $validatedData['user_id'] = auth()->id();
-        $validatedData['email'] = auth()->user()->email;
-        $validatedData['name'] = auth()->user()->name;
-        Comment::create($validatedData);
+        $comment=Comment::create([
+            ...$request->validated(),
+            'user_id'=>auth()->id(),
+            'blog_id'=>$blog->id,
+            'email'=>auth()->user()->email,
+            'name'=>auth()->user()->name
+        ]);
+
         return redirect()->back()->with('success', 'Comment added successfully!');
 
     }
