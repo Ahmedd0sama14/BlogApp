@@ -1,9 +1,11 @@
 <?php
 require __DIR__.'/auth.php';
+require __DIR__.'/AllBlogsRouts/blogs.php';
+require __DIR__.'/AllBlogsRouts/ContactUs.php';
+require __DIR__.'/AllBlogsRouts/Comments.php';
 
-use App\Http\Controllers\BlogController;
-use App\Http\Controllers\CommentController;
-use App\Http\Controllers\ContactController;
+
+
 use App\Http\Controllers\SubscriberController;
 use App\Http\Controllers\ThemController;
 use Illuminate\Support\Facades\Route;
@@ -15,18 +17,3 @@ Route::controller(ThemController::class)->group(function () {
 
 /* Subscriber Routes */
 Route::post('/subscribers', [SubscriberController::class, 'store'])->name('subscribers');
-/* Contact Us Routes */
-Route::controller(ContactController::class)->group(function () {
-    Route::get('/ContactUs', 'view')->name('ContactUs');
-    Route::post('/contacts', 'store')->name('contacts');
-});
-
-/* Blog Routes */
-Route::resource('blogs', BlogController::class)->except(['index']);
-Route::get('blogs.user',[BlogController::class,'userBlogs'])->name('blogs.user');
-
-/* comment Routes */
-Route::middleware('auth')->group(function () {
- Route::post('/comments/{blog}', [CommentController::class, 'storeComment'])->name('comments.store');
- Route::delete('/comments/{id}/delete', [CommentController::class, 'deleteComment'])->name('comments.delete');
-});

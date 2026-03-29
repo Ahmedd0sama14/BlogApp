@@ -15,32 +15,25 @@
                                 <div class="form-group">
                                     <input class="form-control border" name="name" value="{{ old('name') }}"
                                         id="name" type="text" placeholder="Enter your name">
-                                    @error('name')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
+                                    <x-input-error :messages="$errors->get('name')" class="mt-2" />
+
                                 </div>
                                 <div class="form-group">
                                     <input class="form-control border" name="email" value="{{ old('email') }}"
                                         id="email" type="email" placeholder="Enter email address">
-                                    @error('email')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
+                                    <x-input-error :messages="$errors->get('email')" class="mt-2" />
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
                                     <input class="form-control border" name="password" id="name" type="password"
                                         placeholder="Enter your password">
-                                    @error('password')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
+                                    <x-input-error :messages="$errors->get('password')" class="mt-2" />
                                 </div>
                                 <div class="form-group">
                                     <input class="form-control border" name="password_confirmation" type="password"
                                         placeholder="Confirm your password">
-                                    @error('password_confirmation')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
+                                    <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
                                 </div>
 
                                 <div class="form-group text-center mt-4">
@@ -57,6 +50,8 @@
                                         </a>
                                     </p>
                                 </div>
+                            </div>
+                        </div>
                     </form>
                 </div>
             </div>

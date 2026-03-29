@@ -17,17 +17,17 @@
             <!-- Form -->
             <div class="row justify-content-center">
                 <div class="col-md-8">
-                    <form action="{{ route('blogs.update', ['blog' => $blog]) }}" method="POST" enctype="multipart/form-data" class="blog-form p-4 shadow-sm rounded bg-white">
+                    <form action="{{ route('blogs.update', ['blog' => $blog]) }}" method="POST" enctype="multipart/form-data"
+                        class="blog-form p-4 shadow-sm rounded bg-white">
                         @csrf
                         @method('PUT')
 
                         <!-- Blog Name -->
                         <div class="form-group mb-3">
                             <label for="name">Blog Name</label>
-                            <input type="text" class="form-control" name="name" id="name" placeholder="Enter blog name" value="{{ $blog->name }}">
-                            @error('name')
-                                <small class="text-danger">{{ $message }}</small>
-                            @enderror
+                            <input type="text" class="form-control" name="name" id="name"
+                                placeholder="Enter blog name" value="{{ $blog->name }}">
+                            <x-input-error :messages="$errors->get('name')" class="mt-2" />
                         </div>
 
                         <!-- Category -->
@@ -35,15 +35,15 @@
                             <label for="category_id">Category</label>
                             <select class="form-control" name="category_id" id="category_id">
                                 <option value="">Select category</option>
-                                @foreach($categories as $category)
-                                    <option value="{{ $category->id }}" {{ $blog->category_id == $category->id ? 'selected' : '' }}>
+                                @foreach ($categories as $category)
+                                    <option value="{{ $category->id }}"
+                                        {{ $blog->category_id == $category->id ? 'selected' : '' }}>
                                         {{ $category->name }}
                                     </option>
                                 @endforeach
                             </select>
-                            @error('category_id')
-                                <small class="text-danger">{{ $message }}</small>
-                            @enderror
+                            <x-input-error :messages="$errors->get('category_id')" class="mt-2" />
+                            <small class="text-danger">{{ $message }}</small>
                         </div>
 
                         <!-- Image -->
@@ -51,18 +51,14 @@
                             <label for="image">Blog Image</label>
                             <img src="{{ asset('storage/' . $blog->image) }}" alt="Blog Image" class="img-fluid mb-2">
                             <input type="file" class="form-control" name="image" id="image">
-                            @error('image')
-                                <small class="text-danger">{{ $message }}</small>
-                            @enderror
+                            <x-input-error :messages="$errors->get('image')" class="mt-2" />
                         </div>
 
                         <!-- Content -->
                         <div class="form-group mb-3">
                             <label for="content">Content</label>
                             <textarea class="rich-textarea form-control" name="content" id="content" placeholder="Write your blog content...">{{ $blog->content }}</textarea>
-                            @error('content')
-                                <small class="text-danger">{{ $message }}</small>
-                            @enderror
+                            <x-input-error :messages="$errors->get('content')" class="mt-2" />
                         </div>
 
                         <!-- Submit Button -->

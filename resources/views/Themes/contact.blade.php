@@ -4,7 +4,7 @@
 @section('content')
 
 
-   @include('Themes.partials.hero',['title'=>'Contact'])
+    @include('Themes.partials.hero', ['title' => 'Contact'])
     <!--================ Hero sm banner end =================-->
 
     <!-- ================ contact section start ================= -->
@@ -35,36 +35,32 @@
                     </div>
                 </div>
                 <div class="col-md-8 col-lg-9">
-                    @if(session('success'))
+                    @if (session('success'))
                         <div class="alert alert-success">
                             {{ session('success') }}
                         </div>
                     @endif
-                    <form action="{{ route('contacts') }}" class="form-contact contact_form"  method="post">
-                       @csrf
+                    <form action="{{ route('contacts') }}" class="form-contact contact_form" method="post">
+                        @csrf
 
                         <div class="row">
                             <div class="col-lg-5">
                                 <div class="form-group">
                                     <input class="form-control" name="name" id="name" type="text"
                                         placeholder="Enter your name" value="{{ old('name') }}">
-                                         @error('name')
-                                        <div class="alert alert-danger">{{ $message }}</div>
-                                    @enderror
+                                    <x-input-error :messages="$errors->get('name')" class="mt-2" />
+
                                 </div>
                                 <div class="form-group">
                                     <input class="form-control" name="email" id="email" type="email"
                                         placeholder="Enter email address" value="{{ old('email') }}">
-                                         @error('email')
-                                        <div class="alert alert-danger">{{ $message }}</div>
-                                    @enderror
+                                    <x-input-error :messages="$errors->get('email')" class="mt-2" />
                                 </div>
                                 <div class="form-group">
                                     <input class="form-control" name="subject" id="subject" type="text"
                                         placeholder="Enter Subject">
-                                         @error('subject')
-                                        <div class="alert alert-danger">{{ $message }}</div>
-                                    @enderror
+                                    <x-input-error :messages="$errors->get('subject')" class="mt-2" />
+                                        
                                 </div>
                             </div>
                             <div class="col-lg-7">
@@ -83,4 +79,3 @@
         </div>
     </section>
 @endsection
-
