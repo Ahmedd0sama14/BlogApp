@@ -40,16 +40,14 @@ class BlogController extends Controller
     {
         $validatedData = $request->validated();
         if ($request->hasFile('image')) {
-            $category = Category::findOrFail($validatedData['category_id']);
-            $foldername=Str::slug($category->name);
-            $imagePath = $request->file('image')->store('blog_images/' . $foldername, 'public');
-            $validatedData['image'] = $imagePath;
+            $validatedData['image'] = $this->handelingImage($validatedData['category_id'], $request->file('image'));
         }
         $validatedData['user_id'] = auth()->id();
         try {
             Blog::create($validatedData);
             return redirect()->back()->with('success', 'Blog created successfully!');
         } catch (\Exception $e) {
+
             return redirect()->back()->with('error', 'An error occurred while creating the blog: ' );
         }
     }
@@ -79,11 +77,7 @@ class BlogController extends Controller
     {
         $data =$request->validated();
         if ($request->hasFile('image')) {
-            Storage::disk('public')->delete($blog->image);
-            $category = Category::findOrFail($data['category_id']);
-            $foldername=Str::slug($category->name);
-            $imagePath = $request->file('image')->store('blog_images/' . $foldername, 'public');
-            $data['image'] = $imagePath;
+            $data['image'] = $this->handelingImage($data['category_id'], $request->file('image'), $blog->image);
         }
         $blog->update($data);
         return redirect()->back()->with('success', 'Blog updated successfully!');
@@ -95,8 +89,34 @@ class BlogController extends Controller
      */
     public function destroy(Blog $blog)
     {
-        Storage::disk('public')->delete($blog->image);
+        $this->deleteImage($blog->image);
+
         $blog->delete();
         return redirect()->back()->with('success', 'Blog deleted successfully!');
     }
+    public function like(Blog $blog)
+    {
+    
+       $blog->likes()->toggle(auth()->id());
+        return redirect()->back();
+    }
+
+    private function deleteImage($imagePath)
+    {
+        Storage::disk('public')->delete($imagePath);
+    }
+
+
+    private function handelingImage($categoryId,$image,$oldImagePath = null)
+    {
+        if ($oldImagePath) {
+             $this->deleteImage($image);
+        }
+        $category = Category::findOrFail($categoryId);
+        $foldername=Str::slug($category->name);
+
+        return $image->store("blog_images/{$foldername}", 'public');
+
+    }
+
 }

@@ -4,8 +4,7 @@ require __DIR__.'/AllBlogsRouts/blogs.php';
 require __DIR__.'/AllBlogsRouts/ContactUs.php';
 require __DIR__.'/AllBlogsRouts/Comments.php';
 
-
-
+use App\Http\Controllers\BlogController;
 use App\Http\Controllers\SubscriberController;
 use App\Http\Controllers\ThemController;
 use Illuminate\Support\Facades\Route;

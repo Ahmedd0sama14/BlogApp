@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Comment extends Model
 {
-    protected $fillable = ['name', 'email', 'message', 'user_id', 'blog_id'];
+    protected $fillable = [ 'message', 'user_id', 'blog_id'];
 
     public function blog()
     {
@@ -16,5 +16,5 @@ class Comment extends Model
     {
         return $this->belongsTo(User::class);
     }
-
+    
 }

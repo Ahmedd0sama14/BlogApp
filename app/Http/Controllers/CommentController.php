@@ -10,14 +10,11 @@ class CommentController extends Controller
 {
     public function storeComment(StoreCommentRequest $request,Blog $blog)
     {
-        $comment=Comment::create([
-            ...$request->validated(),
-            'user_id'=>auth()->id(),
-            'blog_id'=>$blog->id,
-            'email'=>auth()->user()->email,
-            'name'=>auth()->user()->name
-        ]);
 
+        $blog->comments()->create([
+            'message' => $request->validated('message'),
+            'user_id' => auth()->id(),
+        ]);
         return redirect()->back()->with('success', 'Comment added successfully!');
 
     }
