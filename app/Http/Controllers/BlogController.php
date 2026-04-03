@@ -57,7 +57,7 @@ class BlogController extends Controller
      */
     public function show(Blog $blog)
     {
-        return view('Themes.blog-details', compact('blog'));
+        return view('Themes.blogs.blog-details', compact('blog'));
     }
 
     /**
@@ -96,7 +96,7 @@ class BlogController extends Controller
     }
     public function like(Blog $blog)
     {
-    
+
        $blog->likes()->toggle(auth()->id());
         return redirect()->back();
     }
