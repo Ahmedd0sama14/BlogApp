@@ -16,10 +16,9 @@ class ThemController extends Controller
     }
     public function category($id)
     {
-
-        $categoryBlogs = Blog::where('category_id', $id)->paginate(4);
-        $CatogaryName= Category::find($id)->name;
-        return view('Themes.category', compact('categoryBlogs', 'CatogaryName'));
+        $category= Category::findorFail($id);
+        $categoryBlogs = $category->blogs()->latest()->paginate(4);
+        return view('Themes.blogs.category', compact('categoryBlogs', 'category'));
     }
 
 }

@@ -5,12 +5,8 @@
     <section class="section-margin--small section-margin">
         <div class="container">
             <!-- Alerts -->
-            @if (session('success'))
-                <div class="alert alert-success">{{ session('success') }}</div>
-            @endif
-            @if (session('error'))
-                <div class="alert alert-danger">{{ session('error') }}</div>
-            @endif
+            <x-alert type="success" class="mb-4" />
+            <x-alert type="error" class="mb-4" />
 
             <!-- Form -->
             <div class="row justify-content-center">
@@ -45,6 +41,7 @@
                         <!-- Image -->
                         <div class="form-group mb-3">
                             <label for="image">Blog Image</label>
+                            <x.form-label for="image">Upload an image for your blog</x.form-label>
                             <input type="file" class="form-control" name="image" id="image">
                             <x-input-error :messages="$errors->get('image')" class="mt-2" />
 

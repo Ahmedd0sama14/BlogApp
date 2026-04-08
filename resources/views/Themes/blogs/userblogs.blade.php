@@ -5,9 +5,7 @@
     @include('Themes.partials.hero', ['title' => 'My Blogs'])
 
     <section class="blog-post-area section-margin mt-4">
-        @if (session('success'))
-            <div class="alert alert-success">{{ session('success') }}</div>
-        @endif
+       <x-alert type="success"  />
         <div class="container">
             <div class="row">
 

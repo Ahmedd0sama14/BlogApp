@@ -10,7 +10,7 @@ class ContactController extends Controller
 {
     public function view()
     {
-        return view('Themes.contact');
+        return view('Themes.blogs.contact');
     }
     public function store(StoreContactRequest $request)
     {

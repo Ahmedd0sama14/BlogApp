@@ -3,11 +3,10 @@
 @section('content')
 
 @include('Themes.partials.hero', ['title' => 'Contact'])
-
+<x-alert type="success" />
 <section class="section-margin--small section-margin">
     <div class="container">
         <div class="row">
-
             <!-- معلومات -->
             <div class="col-md-4 col-lg-3 mb-4 mb-md-0">
                 <div class="media contact-info">
@@ -38,11 +37,6 @@
             <!-- الفورم -->
             <div class="col-md-8 col-lg-9">
 
-                @if (session('success'))
-                    <div class="alert alert-success">
-                        {{ session('success') }}
-                    </div>
-                @endif
 
                 <form action="{{ route('contacts') }}" method="POST" class="contact_form">
                     @csrf
@@ -51,32 +45,17 @@
                         <div class="col-lg-5">
 
                             <div class="form-group mb-3">
-                                <input
-                                    class="form-control text-dark @error('name') is-invalid @enderror"
-                                    name="name"
-                                    type="text"
-                                    placeholder="Enter your name"
-                                    value="{{ old('name') }}">
+                               <x-form.input name="name" placeholder="Enter your name" />
                                 <x-input-error :messages="$errors->get('name')" class="mt-1" />
                             </div>
 
                             <div class="form-group mb-3">
-                                <input
-                                    class="form-control text-dark @error('email') is-invalid @enderror"
-                                    name="email"
-                                    type="email"
-                                    placeholder="Enter email address"
-                                    value="{{ old('email') }}">
+                                <x-form.input name="email" type="email" placeholder="Enter your email" />
                                 <x-input-error :messages="$errors->get('email')" class="mt-1" />
                             </div>
 
                             <div class="form-group mb-3">
-                                <input
-                                    class="form-control text-dark @error('subject') is-invalid @enderror"
-                                    name="subject"
-                                    type="text"
-                                    placeholder="Enter Subject"
-                                    value="{{ old('subject') }}">
+                                <x-form.input name="subject" placeholder="Enter Subject" />
                                 <x-input-error :messages="$errors->get('subject')" class="mt-1" />
                             </div>
 
@@ -84,11 +63,7 @@
 
                         <div class="col-lg-7">
                             <div class="form-group mb-3">
-                                <textarea
-                                    class="form-control text-dark w-100 @error('message') is-invalid @enderror"
-                                    name="message"
-                                    rows="5"
-                                    placeholder="Enter Message">{{ old('message') }}</textarea>
+                                <x-form.textarea name="message"  rows="7" />
                                 <x-input-error :messages="$errors->get('message')" class="mt-1" />
                             </div>
                         </div>

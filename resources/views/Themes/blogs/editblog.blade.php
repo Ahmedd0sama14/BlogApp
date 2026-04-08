@@ -7,12 +7,8 @@
     <section class="section-margin--small section-margin">
         <div class="container">
             <!-- Alerts -->
-            @if (session('success'))
-                <div class="alert alert-success">{{ session('success') }}</div>
-            @endif
-            @if (session('error'))
-                <div class="alert alert-danger">{{ session('error') }}</div>
-            @endif
+            <x-alert type="success"  />
+            <x-alert type="error"  />
 
             <!-- Form -->
             <div class="row justify-content-center">

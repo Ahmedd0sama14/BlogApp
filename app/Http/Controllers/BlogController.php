@@ -40,7 +40,7 @@ class BlogController extends Controller
     {
         $validatedData = $request->validated();
         if ($request->hasFile('image')) {
-            $validatedData['image'] = $this->handelingImage($validatedData['category_id'], $request->file('image'));
+            $validatedData['image'] = $this->handelImage($validatedData['category_id'], $request->file('image'));
         }
         $validatedData['user_id'] = auth()->id();
         try {
@@ -77,12 +77,36 @@ class BlogController extends Controller
     {
         $data =$request->validated();
         if ($request->hasFile('image')) {
-            $data['image'] = $this->handelingImage($data['category_id'], $request->file('image'), $blog->image);
+            $data['image'] = $this->handelImage($data['category_id'], $request->file('image'), $blog->image);
         }
         $blog->update($data);
         return redirect()->back()->with('success', 'Blog updated successfully!');
 
     }
+  public function search(Request $request)
+{
+    $query = $request->input('search');
+    $categoryId = $request->input('category_id');
+
+    $blogs = Blog::query();
+    if ($categoryId) {
+        $blogs->where('category_id', $categoryId);
+    }
+
+    if ($query) {
+
+        $blogs->where(function ($q) use ($query) {
+
+            $q->where('name', 'like', "%{$query}%")
+              ->orWhere('content', 'like', "%{$query}%");
+
+        });
+    }
+
+    $blogs = $blogs->latest()->paginate(3)->withQueryString();
+
+    return view('Themes.index', compact('blogs'));
+}
 
     /**
      * Remove the specified resource from storage.
@@ -107,7 +131,7 @@ class BlogController extends Controller
     }
 
 
-    private function handelingImage($categoryId,$image,$oldImagePath = null)
+    private function handelImage($categoryId,$image,$oldImagePath = null)
     {
         if ($oldImagePath) {
              $this->deleteImage($image);

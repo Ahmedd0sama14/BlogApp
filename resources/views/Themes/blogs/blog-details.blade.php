@@ -7,9 +7,7 @@
 <section class="blog-post-area section-margin">
     <div class="container">
 
-        @if (session('success'))
-            <div class="alert alert-success">{{ session('success') }}</div>
-        @endif
+     <x-alert type="success"  />
 
         <div class="row">
 
