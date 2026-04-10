@@ -3,6 +3,7 @@ require __DIR__.'/auth.php';
 require __DIR__.'/AllBlogsRouts/blogs.php';
 require __DIR__.'/AllBlogsRouts/ContactUs.php';
 require __DIR__.'/AllBlogsRouts/Comments.php';
+require __DIR__.'/AllBlogsRouts/admin.php';
 
 use App\Http\Controllers\SubscriberController;
 use App\Http\Controllers\ThemController;
