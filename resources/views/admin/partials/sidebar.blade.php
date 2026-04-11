@@ -13,7 +13,7 @@
 
                 <!-- Dashboard -->
                 <li class="nav-item">
-                    <a href="/admin/dashboard" class="nav-link active">
+                    <a href="{{ route('admin.index') }}" class="nav-link active">
                         <i class="nav-icon bi bi-speedometer"></i>
                         <p>Dashboard</p>
                     </a>
@@ -46,7 +46,7 @@
 
                 <!-- Categories -->
                 <li class="nav-item">
-                    <a href="/admin/categories" class="nav-link">
+                    <a href="{{ route('categories.index') }}" class="nav-link">
                         <i class="nav-icon bi bi-tags"></i>
                         <p>Categories</p>
                     </a>

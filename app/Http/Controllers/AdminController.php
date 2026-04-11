@@ -8,15 +8,23 @@ use App\Models\Category;
 use App\Models\Comment;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class AdminController extends Controller
 {
     public function index()
     {
-        $blogs = Blog::count();
-        $users = User::where('type', 'user')->count();
-        $categories = Category::count();
-        $comments = Comment::latest()->take(5)->get();
-        return view('admin.index', compact('blogs', 'users', 'categories', 'comments'));
+        $count = Cache::remember('count', 400, function () {
+            return [
+                'blogs' => Blog::count(),
+                'users' => User::where('type', 'user')->count(),
+                'categories' => Category::count(),
+                'comments' => Comment::count(),
+            ];
+        });
+        $latestBlogs = Blog::latest()->take(5)->get();
+        $latestComments = Comment::latest()->take(5)->get();
+        return view('admin.index', compact('count', 'latestBlogs', 'latestComments'));
     }
+
 }
