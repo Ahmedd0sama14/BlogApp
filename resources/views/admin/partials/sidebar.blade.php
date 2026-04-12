@@ -13,7 +13,7 @@
 
                 <!-- Dashboard -->
                 <li class="nav-item">
-                    <a href="{{ route('admin.index') }}" class="nav-link active">
+                    <a href="{{ route('admin.index') }}" class="nav-link ">
                         <i class="nav-icon bi bi-speedometer"></i>
                         <p>Dashboard</p>
                     </a>
@@ -30,15 +30,15 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="/admin/posts" class="nav-link">
+                            <a href="{{ route('admin.blogs.index') }}" class="nav-link">
                                 <i class="bi bi-circle"></i>
                                 <p>All Posts</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="/admin/posts/create" class="nav-link">
+                            <a href="{{ route('admin.blogs.index', ['type' => 'trending']) }}" class="nav-link">
                                 <i class="bi bi-circle"></i>
-                                <p>Add New</p>
+                                <p>Trending</p>
                             </a>
                         </li>
                     </ul>
@@ -46,7 +46,7 @@
 
                 <!-- Categories -->
                 <li class="nav-item">
-                    <a href="{{ route('categories.index') }}" class="nav-link">
+                    <a href="{{ route('admin.categories.index') }}" class="nav-link">
                         <i class="nav-icon bi bi-tags"></i>
                         <p>Categories</p>
                     </a>
@@ -62,7 +62,7 @@
 
                 <!-- Users -->
                 <li class="nav-item">
-                    <a href="/admin/users" class="nav-link">
+                    <a href="{{ route('admin.users.index') }}" class="nav-link">
                         <i class="nav-icon bi bi-people"></i>
                         <p>Users</p>
                     </a>

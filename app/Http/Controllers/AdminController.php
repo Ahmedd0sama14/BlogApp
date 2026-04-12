@@ -26,5 +26,10 @@ class AdminController extends Controller
         $latestComments = Comment::latest()->take(5)->get();
         return view('admin.index', compact('count', 'latestBlogs', 'latestComments'));
     }
+    public function deleteComment(Comment $comment)
+    {
+        $comment->delete();
+        return redirect()->back()->with('success', 'Comment deleted successfully.');
+    }
 
 }

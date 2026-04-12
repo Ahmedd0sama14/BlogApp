@@ -18,9 +18,8 @@ class CommentController extends Controller
         return redirect()->back()->with('success', 'Comment added successfully!');
 
     }
-    public function deleteComment($commentId)
+    public function deleteComment(Comment $comment)
     {
-        $comment = Comment::findOrFail($commentId);
         $comment->delete();
         return redirect()->back()->with('success', 'Comment deleted successfully!');
     }

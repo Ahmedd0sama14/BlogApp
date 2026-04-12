@@ -50,12 +50,7 @@
         </div>
     </div>
 
-    <!-- ⚡ Quick Actions -->
-    <div class="mb-4">
-        <a href="#" class="btn btn-success">+ Add New Post</a>
-        <a href="#" class="btn btn-primary">Manage Categories</a>
-        <a href="#" class="btn btn-dark">View Website</a>
-    </div>
+
 
     <div class="row">
 

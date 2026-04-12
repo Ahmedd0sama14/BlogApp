@@ -16,7 +16,8 @@ class AdminMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         if(!auth()->check() || auth()->user()->type !== 'admin') {
-            abort(403, 'Unauthorized');
+            return to_route('index')->with('error', 'You do not have permission to access this page.');
+
         }
         return $next($request);
     }

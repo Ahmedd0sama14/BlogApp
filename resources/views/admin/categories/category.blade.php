@@ -7,7 +7,7 @@
         <x-alert type="success" />
         <h2>Categories</h2>
 
-        <a href="{{ route('categories.create') }}" class="btn btn-primary mb-3">
+        <a href="{{ route('admin.categories.create') }}" class="btn btn-primary mb-3">
             Add New Category
         </a>
 
@@ -16,6 +16,7 @@
                 <tr>
                     <th>#</th>
                     <th>Name</th>
+                    <th>Blogs Count</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -24,10 +25,11 @@
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $category->name }}</td>
+                        <td>{{ $category->blogs_count }} blogs</td>
                         <td>
-                            <a href="{{ route('categories.edit', $category->id) }}" class="btn btn-sm btn-warning">Edit</a>
+                            <a href="{{ route('admin.categories.show', ['category' => $category]) }}" class="btn btn-sm btn-warning">View</a>
 
-                            <form action="{{ route('categories.destroy', $category->id) }}" method="POST"
+                            <form action="{{ route('admin.categories.destroy', $category->id) }}" method="POST"
                                 style="display:inline;">
                                 @csrf
                                 @method('DELETE')
