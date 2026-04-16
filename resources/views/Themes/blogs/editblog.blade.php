@@ -39,7 +39,6 @@
                                 @endforeach
                             </select>
                             <x-input-error :messages="$errors->get('category_id')" class="mt-2" />
-                            <small class="text-danger">{{ $message }}</small>
                         </div>
 
                         <!-- Image -->

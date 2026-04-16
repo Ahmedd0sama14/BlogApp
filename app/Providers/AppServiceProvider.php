@@ -11,10 +11,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-            $this->app->bind(
-                \App\Contracts\CommentServiceContract::class,
-                \App\Services\CommentService::class
-            );
+        $this->app->bind(
+            \App\Repositories\Contracts\BlogContract::class,
+            \App\Repositories\SQL\BlogRepository::class
+        );
     }
 
     /**

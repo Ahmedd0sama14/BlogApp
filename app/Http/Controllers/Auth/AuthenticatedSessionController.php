@@ -29,7 +29,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
         if(auth()->user()->type == 'admin') {
-            return to_route('admin.index');
+            return to_route('admin.blogs.index');
         }
 
         return redirect()->intended(route('index', absolute: false));

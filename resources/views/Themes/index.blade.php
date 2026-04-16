@@ -10,6 +10,7 @@
     @include('Themes.partials.hero', ['title' => 'Home'])
 
     <section class="blog-post-area section-margin mt-4">
+        <x-alert type="success" />
         <div class="container">
             <div class="row">
 

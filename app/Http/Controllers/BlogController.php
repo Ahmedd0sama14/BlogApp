@@ -2,25 +2,27 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreBlogRequest;
 use App\Http\Requests\UpdateBlogRequest;
 use App\Models\Blog;
-use App\Models\Category;
+use App\Repositories\SQL\BlogRepository;
+use App\Services\BlogService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 class BlogController extends Controller
 {
-    public function __construct()
+    public function __construct( protected BlogRepository $blogRepository,protected BlogService $blogService)
     {
         $this->middleware('auth')->except(['show']);
     }
+
+
     public function userBlogs()
     {
-        $userBlogs = Blog::where('user_id', auth()->id())->paginate(2);
-        return view('Themes.blogs.userblogs', compact('userBlogs'));
+        $userBlogs = $this->blogRepository->userBlogs();
 
+        return view('Themes.blogs.userblogs', compact('userBlogs'));
     }
 
 
@@ -29,7 +31,7 @@ class BlogController extends Controller
      */
     public function create()
     {
-        $catogories = Category::all();
+        $catogories = $this->blogRepository->getallcategories();
         return view('Themes.blogs.addnewblog', compact('catogories'));
     }
 
@@ -38,18 +40,9 @@ class BlogController extends Controller
      */
     public function store(StoreBlogRequest $request)
     {
-        $validatedData = $request->validated();
-        if ($request->hasFile('image')) {
-            $validatedData['image'] = $this->handelImage($validatedData['category_id'], $request->file('image'));
-        }
-        $validatedData['user_id'] = auth()->id();
-        try {
-            Blog::create($validatedData);
-            return redirect()->back()->with('success', 'Blog created successfully!');
-        } catch (\Exception $e) {
+        $this->blogService->createBlog($request);
+        return redirect()->route('index')->with('success', 'Blog created successfully!');
 
-            return redirect()->back()->with('error', 'An error occurred while creating the blog: ' );
-        }
     }
 
     /**
@@ -57,6 +50,7 @@ class BlogController extends Controller
      */
     public function show(Blog $blog)
     {
+        $this->blogRepository->find($blog);
         return view('Themes.blogs.blog-details', compact('blog'));
     }
 
@@ -65,9 +59,8 @@ class BlogController extends Controller
      */
     public function edit(Blog $blog)
     {
-        $categories = Category::all();
+        $categories = $this->blogRepository->getAllCategories();
         return view('Themes.blogs.editblog', compact('blog', 'categories'));
-
     }
 
     /**
@@ -75,72 +68,29 @@ class BlogController extends Controller
      */
     public function update(UpdateBlogRequest $request, Blog $blog)
     {
-        $data =$request->validated();
-        if ($request->hasFile('image')) {
-            $data['image'] = $this->handelImage($data['category_id'], $request->file('image'), $blog->image);
-        }
-        $blog->update($data);
-        return redirect()->back()->with('success', 'Blog updated successfully!');
-
+        $this->blogService->update($request, $blog);
+        return redirect()->route('index')->with('success', 'Blog updated successfully!');
     }
-  public function search(Request $request)
-{
-    $query = $request->input('search');
-    $categoryId = $request->input('category_id');
+    public function search(Request $request)
+    {
+        $blogs = $this->blogRepository->search($request);
 
-    $blogs = Blog::query();
-    if ($categoryId) {
-        $blogs->where('category_id', $categoryId);
+        return view('Themes.index', compact('blogs'));
     }
-
-    if ($query) {
-
-        $blogs->where(function ($q) use ($query) {
-
-            $q->where('name', 'like', "%{$query}%")
-              ->orWhere('content', 'like', "%{$query}%");
-
-        });
-    }
-
-    $blogs = $blogs->latest()->paginate(3)->withQueryString();
-
-    return view('Themes.index', compact('blogs'));
-}
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(Blog $blog)
     {
-        $this->deleteImage($blog->image);
-
-        $blog->delete();
+        $this->blogRepository->deleteImage($blog->image);
+        $this->blogRepository->delete($blog);
         return redirect()->back()->with('success', 'Blog deleted successfully!');
     }
     public function like(Blog $blog)
     {
 
-       $blog->likes()->toggle(auth()->id());
+        $blog->likes()->toggle(auth()->id());
         return redirect()->back();
     }
-
-    private function deleteImage($imagePath)
-    {
-        Storage::disk('public')->delete($imagePath);
-    }
-
-
-    private function handelImage($categoryId,$image,$oldImagePath = null)
-    {
-        if ($oldImagePath) {
-             $this->deleteImage($image);
-        }
-        $category = Category::findOrFail($categoryId);
-        $foldername=Str::slug($category->name);
-
-        return $image->store("blog_images/{$foldername}", 'public');
-
-    }
-
 }
