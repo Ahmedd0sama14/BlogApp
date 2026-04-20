@@ -3,21 +3,26 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreCategoryRequest;
+use App\Http\Requests\UpdateCategoryRequest;
 use App\Models\Category;
-use Illuminate\Http\Request;
+use App\Repositories\Contracts\CategoryContract;
+
 
 class CategoryController extends Controller
 {
+    public function __construct(protected CategoryContract $categoryRepository) {}
 
     public function index()
     {
-        $Categories = Category::withCount('blogs')->paginate(8);
-        return view('admin.categories.category', compact('Categories'));
+        $categories = $this->categoryRepository->pagination($this->categoryRepository->query()->withCount('blogs')->latest(), 5);
+        return view('admin.categories.category', compact('categories'));
     }
     public function show(Category $category)
     {
-        $blogsCount=$category->blogs()->count();
-        $blogs = $category->blogs()->latest()->paginate(5);
+        $category = $this->categoryRepository->findWith($category->id, [], ['blogs']);
+        $blogsCount = $category->blogs_count;
+        $blogs = $this->categoryRepository->pagination($category->blogs()->latest(), 5);
         return view('admin.categories.blogs', compact('blogs', 'blogsCount', 'category'));
     }
     public function create()
@@ -25,41 +30,30 @@ class CategoryController extends Controller
         return view('admin.categories.create');
     }
 
-    public function store(Request $request)
+    public function store(StoreCategoryRequest $request)
     {
-        $request->validate([
-            'name' => 'required|unique:categories,name',
-        ]);
+        $data = $request->validated();
 
-        Category::create([
-            'name' => $request->name,
-        ]);
+        $this->categoryRepository->create($data);
 
         return redirect()->route('admin.categories.index')->with('success', 'Category created successfully.');
     }
-    public function edit($id)
+    public function edit(Category $category)
     {
-        $category = Category::findOrFail($id);
+        $category = $this->categoryRepository->findWith($category->id);
         return view('admin.categories.edit', compact('category'));
     }
-    public function update(Request $request, $id)
+    public function update(UpdateCategoryRequest $request, Category $category)
     {
-        $request->validate([
-            'name' => 'required|unique:categories,name,' . $id,
-        ]);
+        $data = $request->validated();
 
-        $category = Category::findOrFail($id);
-        $category->update([
-            'name' => $request->name,
-        ]);
-
+        $this->categoryRepository->update($category, $data);
         return redirect()->route('admin.categories.index')->with('success', 'Category updated successfully.');
     }
 
-    public function destroy($id)
+    public function destroy(Category $category )
     {
-        $category = Category::findOrFail($id);
-        $category->delete();
+        $this->categoryRepository->delete($category);
         return redirect()->route('admin.categories.index')->with('success', 'Category deleted successfully.');
     }
 }

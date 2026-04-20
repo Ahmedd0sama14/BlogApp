@@ -6,10 +6,7 @@ use App\Models\Blog;
 use App\Models\Category;
 use App\Repositories\Contracts\BlogContract;
 use App\Repositories\SQL\BaseRepository;
-use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 class BlogRepository extends BaseRepository implements BlogContract
 
@@ -22,15 +19,11 @@ class BlogRepository extends BaseRepository implements BlogContract
     {
         return Category::all();
     }
-    public function search(Request $request)
+    public function search(array $request): LengthAwarePaginator
     {
-        $query = $request->input('search');
-        $categoryId = $request->input('category_id');
-        $blogs = $this->model->query();
-        if ($categoryId) {
-            $blogs->where('category_id', $categoryId);
-        }
 
+        $query = trim($request['search'] ?? '');
+        $blogs = $this->model->query();
         if ($query) {
 
             $blogs->where(function ($q) use ($query) {
@@ -39,11 +32,25 @@ class BlogRepository extends BaseRepository implements BlogContract
                     ->orWhere('content', 'like', "%{$query}%");
             });
         }
-        return $blogs->latest()->paginate(10)->withQueryString();
+        return $this->pagination($blogs);
     }
     public function userBlogs(): LengthAwarePaginator
     {
-        $userBlogs = $this->model->where('user_id', auth()->id())->paginate(3);
-        return $userBlogs;
+        $userBlogs = $this->model->where('user_id', auth()->id());
+        return $this->pagination($userBlogs);
     }
+     public function getAdminBlogs(string $type): LengthAwarePaginator
+     {
+        $blogs = $this->model->withCount(['comments', 'likes']);
+        if ($type==='trending')
+            {
+            $blogs = $blogs->orderByDesc('comments_count');
+        } else  {
+            $blogs = $blogs->latest();
+        }
+        $blogs = $this->pagination($blogs);
+        return $blogs;
+
+    }
+
 }

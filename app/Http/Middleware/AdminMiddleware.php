@@ -15,7 +15,8 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if( auth()->user()->type !== 'admin') {
+        $user = auth()->user();
+        if(!$user || $user->type !== 'admin') {
             return to_route('index')->with('error', 'You do not have permission to access this page.');
 
         }

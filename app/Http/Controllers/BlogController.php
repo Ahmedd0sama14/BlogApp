@@ -6,13 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreBlogRequest;
 use App\Http\Requests\UpdateBlogRequest;
 use App\Models\Blog;
-use App\Repositories\SQL\BlogRepository;
+use App\Repositories\Contracts\BlogContract;
 use App\Services\BlogService;
 use Illuminate\Http\Request;
 
 class BlogController extends Controller
 {
-    public function __construct( protected BlogRepository $blogRepository,protected BlogService $blogService)
+    public function __construct( protected BlogContract $blogRepository,protected BlogService $blogService)
     {
         $this->middleware('auth')->except(['show']);
     }
@@ -50,7 +50,7 @@ class BlogController extends Controller
      */
     public function show(Blog $blog)
     {
-        $this->blogRepository->find($blog);
+        $blog = $this->blogRepository->findWith($blog->id, ['category', 'user'], ['comments', 'likes']);
         return view('Themes.blogs.blog-details', compact('blog'));
     }
 
@@ -68,12 +68,12 @@ class BlogController extends Controller
      */
     public function update(UpdateBlogRequest $request, Blog $blog)
     {
-        $this->blogService->update($request, $blog);
+        $this->blogService->updateBlog($request, $blog);
         return redirect()->route('index')->with('success', 'Blog updated successfully!');
     }
     public function search(Request $request)
     {
-        $blogs = $this->blogRepository->search($request);
+        $blogs = $this->blogRepository->search($request->only(['search']));
 
         return view('Themes.index', compact('blogs'));
     }
@@ -83,8 +83,7 @@ class BlogController extends Controller
      */
     public function destroy(Blog $blog)
     {
-        $this->blogRepository->deleteImage($blog->image);
-        $this->blogRepository->delete($blog);
+        $this->blogService->deleteBlog($blog);
         return redirect()->back()->with('success', 'Blog deleted successfully!');
     }
     public function like(Blog $blog)

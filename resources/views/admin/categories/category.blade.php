@@ -21,13 +21,14 @@
                 </tr>
             </thead>
             <tbody>
-                @forelse($Categories as $category)
+                @forelse($categories as $category)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $category->name }}</td>
                         <td>{{ $category->blogs_count }} blogs</td>
                         <td>
                             <a href="{{ route('admin.categories.show', ['category' => $category]) }}" class="btn btn-sm btn-warning">View</a>
+                            <a href="{{ route('admin.categories.edit', ['category' => $category]) }}" class="btn btn-sm btn-info">Edit</a>
 
                             <form action="{{ route('admin.categories.destroy', $category->id) }}" method="POST"
                                 style="display:inline;">

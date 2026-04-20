@@ -16,7 +16,7 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
     Route::resource('categories', CategoryController::class);
 });
 
-/* Admin Blog Routes */
+/* Admin User Routes */
 Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
     Route::resource('users', UserController::class);
 });

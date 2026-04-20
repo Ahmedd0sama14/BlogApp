@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Cache;
 
 class AdminController extends Controller
 {
+    
+
     public function index()
     {
         $count = Cache::remember('count', 400, function () {
